@@ -32,8 +32,6 @@
     "dist"
   ],
   "scripts": {
-    "prepare": "run-p prepare:*",
-    "prepare:tslib": "rimraf node_modules/@beenotung/tslib/index.*",
     "clean": "rimraf dist",
     "format": "run-s format:*",
     "format:prettier": "prettier --write .",
@@ -53,7 +51,6 @@
     "test": "run-s format tsc test:ts mocha"
   },
   "dependencies": {
-    "@beenotung/tslib": "^17.8.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.22",
