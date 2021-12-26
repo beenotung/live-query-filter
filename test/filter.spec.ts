@@ -1,12 +1,17 @@
 import { expect } from 'chai'
 import sinon, { SinonSpy } from 'sinon'
-import { publish, subscribe, Unsubscribe } from '../src/filter'
+import { createLiveQueryFilter, Unsubscribe } from '../src/filter'
 import debug, { Debugger } from 'debug'
 
 context('Filter spec', () => {
   let log: Debugger
+  let publish: ReturnType<typeof createLiveQueryFilter>['publish']
+  let subscribe: ReturnType<typeof createLiveQueryFilter>['subscribe']
   before(() => {
     log = debug('filter.spec')
+    let filter = createLiveQueryFilter()
+    publish = filter.publish
+    subscribe = filter.subscribe
   })
   it('should not throw error when publish to table without pre-defined subscriptions', () => {
     publish([{ table: 'new_table' }])
@@ -40,7 +45,6 @@ context('Filter spec', () => {
     publish([{ table: 'user', field: 'field1' }])
     expect(callback.callCount).to.equals(1)
   })
-
   it('should only trigger related subscriptions', () => {
     let count_user = sinon.spy()
     subscribe([{ table: 'user' }], count_user)
@@ -149,5 +153,20 @@ context('Filter spec', () => {
     expect(select_multiple_user.callCount).to.equals(4)
     expect(select_post_by_timestamp.callCount).to.equals(1)
     expect(select_post_1.callCount).to.equals(1)
+  })
+  it('should isolate each filter instance', () => {
+    let filter1 = createLiveQueryFilter()
+    let filter2 = createLiveQueryFilter()
+
+    let callback1 = sinon.spy()
+    let callback2 = sinon.spy()
+
+    filter1.subscribe([{ table: 'user' }], callback1)
+    filter2.subscribe([{ table: 'user' }], callback2)
+
+    filter1.publish([{ table: 'user' }])
+
+    expect(callback1.callCount).to.equals(1)
+    expect(callback2.callCount).to.equals(0)
   })
 })

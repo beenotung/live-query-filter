@@ -27,14 +27,16 @@ type SubscriptionsIndex = {
   }
 }
 
-const subscriptions: SubscriptionsIndex = {}
-
 export type Unsubscribe = () => void
 
-export function subscribe(filters: Filter[], callback: Callback): Unsubscribe {
+export function subscribe(
+  subscriptions: SubscriptionsIndex,
+  filters: Filter[],
+  callback: Callback,
+): Unsubscribe {
   const callbackSets: Array<Set<Callback>> = []
 
-  registerFilter(callbackSets, callback, filters)
+  registerFilter(subscriptions, callbackSets, callback, filters)
 
   const unsubscribe = () => {
     callbackSets.forEach(set => set.delete(callback))
@@ -44,6 +46,7 @@ export function subscribe(filters: Filter[], callback: Callback): Unsubscribe {
 }
 
 function registerFilter(
+  subscriptions: SubscriptionsIndex,
   callbackSets: Array<Set<Callback>>,
   callback: Callback,
   filters: Filter[],
@@ -94,7 +97,7 @@ function registerFilterField(
   callbackSets.push(set)
 }
 
-export function publish(filters: Filter[]) {
+export function publish(subscriptions: SubscriptionsIndex, filters: Filter[]) {
   /**
    * Collect callback then call in batch
    *
@@ -102,12 +105,16 @@ export function publish(filters: Filter[]) {
    *  */
   const callbackSet = new Set<Callback>()
 
-  publishFilter(callbackSet, filters)
+  publishFilter(subscriptions, callbackSet, filters)
 
   callbackSet.forEach(cb => cb())
 }
 
-function publishFilter(callbackSet: Set<Callback>, filters: Filter[]) {
+function publishFilter(
+  subscriptions: SubscriptionsIndex,
+  callbackSet: Set<Callback>,
+  filters: Filter[],
+) {
   filters.forEach(filter => {
     const table = subscriptions[filter.table]
     if (!table) return
@@ -145,5 +152,19 @@ function publishFilterId(
     fields['*']?.forEach(cb => callbackSet.add(cb))
   } else {
     Object.values(fields).filter(set => set.forEach(cb => callbackSet.add(cb)))
+  }
+}
+
+export function createLiveQueryFilter() {
+  const subscriptions: SubscriptionsIndex = {}
+
+  return {
+    subscriptions,
+    subscribe: function(filters: Filter[], callback: Callback): Unsubscribe {
+      return subscribe(subscriptions, filters, callback)
+    },
+    publish: function(filters: Filter[]) {
+      publish(subscriptions, filters)
+    },
   }
 }
