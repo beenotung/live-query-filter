@@ -29,6 +29,8 @@
     "test": "test"
   },
   "files": [
+    "src",
+    "test",
     "dist"
   ],
   "scripts": {
