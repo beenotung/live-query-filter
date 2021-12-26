@@ -29,7 +29,9 @@ type SubscriptionsIndex = {
 
 const subscriptions: SubscriptionsIndex = {}
 
-export function subscribe(filters: Filter[], callback: Callback) {
+export type Unsubscribe = () => void
+
+export function subscribe(filters: Filter[], callback: Callback): Unsubscribe {
   const callbackSets: Array<Set<Callback>> = []
 
   registerFilter(callbackSets, callback, filters)

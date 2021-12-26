@@ -1,8 +1,21 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
-import { publish, subscribe } from '../src/filter'
+import { publish, subscribe, Unsubscribe } from '../src/filter'
 
 context('Filter spec', () => {
+  let callback = sinon.spy()
+  let unsubscribe: Unsubscribe
+  it('should trigger callback after subscribe', () => {
+    unsubscribe = subscribe([{ table: 'user' }], callback)
+    expect(callback.callCount).to.equals(0)
+    publish([{ table: 'user' }])
+    expect(callback.callCount).to.equals(1)
+  })
+  it('should not trigger callback after unsubscribe', () => {
+    unsubscribe()
+    publish([{ table: 'user' }])
+    expect(callback.callCount).to.equals(1)
+  })
   it('should only trigger related subscriptions', () => {
     let count_user = sinon.spy()
     subscribe([{ table: 'user' }], count_user)
