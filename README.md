@@ -6,6 +6,28 @@ Designed for web-redux
 
 [![npm Package Version](https://img.shields.io/npm/v/live-query-filter.svg?maxAge=3600)](https://www.npmjs.com/package/live-query-filter)
 
+## Usage Example
+
+```typescript
+import { createLiveQueryFilter } from 'live-query-filter'
+import sinon from 'sinon' // for testing
+
+let filter = createLiveQueryFilter()
+
+let select_user1_profile = sinon.spy()
+
+filter.subscribe(
+  [{ table: 'user', id: 1, fields: ['username', 'rank'] }],
+  select_user1_profile,
+)
+console.log(select_user1_profile.callCount) // 0
+
+filter.publish([{ table: 'user', id: 1, fields: ['username'] }])
+console.log(select_user1_profile.callCount) // 1
+```
+
+More examples refer to [filter.spec.ts](./test/filter.spec.ts)
+
 ## License
 
 This project is licensed with [BSD-2-Clause](./LICENSE)
