@@ -1,7 +1,7 @@
 {
   "name": "live-query-filter",
   "version": "0.0.0",
-  "description": "TODO: add desc",
+  "description": "Publish and subscribe to database queries, serve as backbone of live query change detection engine",
   "keywords": [
     "live",
     "query",
@@ -48,8 +48,6 @@
     "report": "run-s report:update report:open",
     "prepublishOnly": "run-s test build",
     "test": "run-s format tsc mocha"
-  },
-  "dependencies": {
   },
   "devDependencies": {
     "@types/chai": "^4.2.22",
