@@ -1,0 +1,80 @@
+{
+  "name": "live-query-filter",
+  "version": "0.0.0",
+  "description": "TODO: add desc",
+  "keywords": [
+    "live",
+    "query",
+    "filter",
+    "sql",
+    "cache",
+    "invalidate",
+    "table"
+  ],
+  "author": "Beeno Tung <aabbcc1241@yahoo.com.hk> (https://beeno-tung.surge.sh)",
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beenotung/live-query-filter.git"
+  },
+  "homepage": "https://github.com/beenotung/live-query-filter#readme",
+  "bugs": {
+    "url": "https://github.com/beenotung/live-query-filter/issues"
+  },
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "module": "dist/esm/index.js",
+  "sideEffects": false,
+  "directories": {
+    "test": "test"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepare": "run-p prepare:*",
+    "prepare:tslib": "rimraf node_modules/@beenotung/tslib/index.*",
+    "clean": "rimraf dist",
+    "format": "run-s format:*",
+    "format:prettier": "prettier --write .",
+    "format:json": "format-json-cli",
+    "format:eslint": "eslint --ext .ts --fix .",
+    "build": "run-s clean tsc",
+    "tsc": "run-p tsc:*",
+    "tsc:cjs": "tsc -p tsconfig.cjs.json",
+    "tsc:esm": "tsc -p tsconfig.esm.json",
+    "test:ts": "ts-node test/index.ts",
+    "mocha": "ts-mocha \"{src,test}/**/*.spec.ts\"",
+    "coverage": "nyc ts-mocha --reporter=progress \"{src,test}/**/*.spec.ts\"",
+    "report:update": "nyc --reporter=lcov ts-mocha --reporter=progress \"{src,test}/**/*.spec.ts\"",
+    "report:open": "open-cli coverage/lcov-report/index.html",
+    "report": "run-s report:update report:open",
+    "prepublishOnly": "run-s test build",
+    "test": "run-s format tsc test:ts mocha"
+  },
+  "dependencies": {
+    "@beenotung/tslib": "^17.8.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "8",
+    "@types/node": "*",
+    "@types/sinon": "^10.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
+    "chai": "^4.3.4",
+    "eslint": "^8.5.0",
+    "format-json-cli": "^1.0.1",
+    "mocha": "8",
+    "npm-run-all": "^4.1.5",
+    "nyc": "^15.1.0",
+    "open-cli": "^7.0.1",
+    "prettier": "^2.5.0",
+    "rimraf": "^3.0.2",
+    "sinon": "^11.1.2",
+    "ts-mocha": "8",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.4"
+  }
+}
