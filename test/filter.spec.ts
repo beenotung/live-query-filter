@@ -36,12 +36,15 @@ context('Filter spec', () => {
 
     let select_user_2_username = sinon.spy()
     subscribe(
-      [{ table: 'user', id: 2, fields: ['username'] }],
+      [{ table: 'user', id: 2, field: 'username' }],
       select_user_2_username,
     )
 
     let select_user_2_rank = sinon.spy()
     subscribe([{ table: 'user', id: 2, fields: ['rank'] }], select_user_2_rank)
+
+    let select_multiple_user = sinon.spy()
+    subscribe([{ table: 'user', ids: [2, 3] }], select_multiple_user)
 
     let select_post_by_timestamp = sinon.spy()
     subscribe([{ table: 'post' }], select_post_by_timestamp)
@@ -54,6 +57,7 @@ context('Filter spec', () => {
     expect(select_user_1_username.callCount).to.equals(0)
     expect(select_user_2_username.callCount).to.equals(0)
     expect(select_user_2_rank.callCount).to.equals(0)
+    expect(select_multiple_user.callCount).to.equals(0)
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
@@ -64,6 +68,7 @@ context('Filter spec', () => {
     expect(select_user_1_username.callCount).to.equals(1)
     expect(select_user_2_username.callCount).to.equals(1)
     expect(select_user_2_rank.callCount).to.equals(1)
+    expect(select_multiple_user.callCount).to.equals(1)
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
@@ -74,6 +79,7 @@ context('Filter spec', () => {
     expect(select_user_1_username.callCount).to.equals(2)
     expect(select_user_2_username.callCount).to.equals(1)
     expect(select_user_2_rank.callCount).to.equals(1)
+    expect(select_multiple_user.callCount).to.equals(1)
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
@@ -84,26 +90,40 @@ context('Filter spec', () => {
     expect(select_user_1_username.callCount).to.equals(2)
     expect(select_user_2_username.callCount).to.equals(2)
     expect(select_user_2_rank.callCount).to.equals(1)
+    expect(select_multiple_user.callCount).to.equals(2)
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
     log('# update user[2].rank')
-    publish([{ table: 'user', id: 2, fields: ['rank'] }])
+    publish([{ table: 'user', id: 2, field: 'rank' }])
     expect(count_user.callCount).to.equals(4)
     expect(look_up_user_by_username.callCount).to.equals(3)
     expect(select_user_1_username.callCount).to.equals(2)
     expect(select_user_2_username.callCount).to.equals(2)
     expect(select_user_2_rank.callCount).to.equals(2)
+    expect(select_multiple_user.callCount).to.equals(3)
+    expect(select_post_by_timestamp.callCount).to.equals(0)
+    expect(select_post_1.callCount).to.equals(0)
+
+    log('# update user[3,4]')
+    publish([{ table: 'user', ids: [3, 4] }])
+    expect(count_user.callCount).to.equals(5)
+    expect(look_up_user_by_username.callCount).to.equals(4)
+    expect(select_user_1_username.callCount).to.equals(2)
+    expect(select_user_2_username.callCount).to.equals(2)
+    expect(select_user_2_rank.callCount).to.equals(2)
+    expect(select_multiple_user.callCount).to.equals(4)
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
     log('# update post 1')
     publish([{ table: 'post', id: 1 }])
-    expect(count_user.callCount).to.equals(4)
-    expect(look_up_user_by_username.callCount).to.equals(3)
+    expect(count_user.callCount).to.equals(5)
+    expect(look_up_user_by_username.callCount).to.equals(4)
     expect(select_user_1_username.callCount).to.equals(2)
     expect(select_user_2_username.callCount).to.equals(2)
     expect(select_user_2_rank.callCount).to.equals(2)
+    expect(select_multiple_user.callCount).to.equals(4)
     expect(select_post_by_timestamp.callCount).to.equals(1)
     expect(select_post_1.callCount).to.equals(1)
   })
