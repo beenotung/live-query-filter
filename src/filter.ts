@@ -17,7 +17,7 @@ export type Filter = {
 
 export type Callback = () => void
 
-type SubscriptionsIndex = {
+export type SubscriptionsIndex = {
   [table: string]: {
     // id | '*'
     [id: number | string]: {
