@@ -21,9 +21,9 @@
   "bugs": {
     "url": "https://github.com/beenotung/live-query-filter/issues"
   },
-  "main": "dist/cjs/index.js",
-  "types": "dist/cjs/index.d.ts",
-  "module": "dist/esm/index.js",
+  "main": "dist/cjs/filter.js",
+  "types": "dist/cjs/filter.d.ts",
+  "module": "dist/esm/filter.js",
   "sideEffects": false,
   "directories": {
     "test": "test"
