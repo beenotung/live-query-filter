@@ -1,23 +1,46 @@
 import { expect } from 'chai'
-import sinon from 'sinon'
+import sinon, { SinonSpy } from 'sinon'
 import { publish, subscribe, Unsubscribe } from '../src/filter'
-import debug from 'debug'
+import debug, { Debugger } from 'debug'
 
 context('Filter spec', () => {
-  let callback = sinon.spy()
-  let unsubscribe: Unsubscribe
-  let log = debug('filter.spec')
-  it('should trigger callback after subscribe', () => {
-    unsubscribe = subscribe([{ table: 'user' }], callback)
+  let log: Debugger
+  before(() => {
+    log = debug('filter.spec')
+  })
+  it('should not throw error when publish to table without pre-defined subscriptions', () => {
+    publish([{ table: 'new_table' }])
+  })
+  it('should not throw error when publish to field without pre-defined subscriptions', () => {
+    publish([{ table: 'new_table', field: '*' }])
+    publish([{ table: 'new_table', fields: ['new_field2', 'new_field3'] }])
+  })
+  context('unsubscribe', () => {
+    let callback: SinonSpy
+    let unsubscribe: Unsubscribe
+    before(() => {
+      callback = sinon.spy()
+    })
+    it('should trigger callback after subscribe', () => {
+      unsubscribe = subscribe([{ table: 'user' }], callback)
+      expect(callback.callCount).to.equals(0)
+      publish([{ table: 'user' }])
+      expect(callback.callCount).to.equals(1)
+    })
+    it('should not trigger callback after unsubscribe', () => {
+      unsubscribe()
+      publish([{ table: 'user' }])
+      expect(callback.callCount).to.equals(1)
+    })
+  })
+  it('should trigger update to wildcard field', () => {
+    let callback = sinon.spy()
+    subscribe([{ table: 'user', field: '*' }], callback)
     expect(callback.callCount).to.equals(0)
-    publish([{ table: 'user' }])
+    publish([{ table: 'user', field: 'field1' }])
     expect(callback.callCount).to.equals(1)
   })
-  it('should not trigger callback after unsubscribe', () => {
-    unsubscribe()
-    publish([{ table: 'user' }])
-    expect(callback.callCount).to.equals(1)
-  })
+
   it('should only trigger related subscriptions', () => {
     let count_user = sinon.spy()
     subscribe([{ table: 'user' }], count_user)
