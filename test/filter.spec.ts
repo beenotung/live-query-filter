@@ -1,10 +1,12 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 import { publish, subscribe, Unsubscribe } from '../src/filter'
+import debug from 'debug'
 
 context('Filter spec', () => {
   let callback = sinon.spy()
   let unsubscribe: Unsubscribe
+  let log = debug('filter.spec')
   it('should trigger callback after subscribe', () => {
     unsubscribe = subscribe([{ table: 'user' }], callback)
     expect(callback.callCount).to.equals(0)
@@ -55,7 +57,7 @@ context('Filter spec', () => {
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
-    console.log('# insert user')
+    log('# insert user')
     publish([{ table: 'user' }])
     expect(count_user.callCount).to.equals(1)
     expect(look_up_user_by_username.callCount).to.equals(1)
@@ -65,7 +67,7 @@ context('Filter spec', () => {
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
-    console.log('# update user[1].username')
+    log('# update user[1].username')
     publish([{ table: 'user', id: 1, fields: ['username'] }])
     expect(count_user.callCount).to.equals(2)
     expect(look_up_user_by_username.callCount).to.equals(2)
@@ -75,7 +77,7 @@ context('Filter spec', () => {
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
-    console.log('# update user[2].username')
+    log('# update user[2].username')
     publish([{ table: 'user', id: 2, fields: ['username'] }])
     expect(count_user.callCount).to.equals(3)
     expect(look_up_user_by_username.callCount).to.equals(3)
@@ -85,7 +87,7 @@ context('Filter spec', () => {
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
-    console.log('# update user[2].rank')
+    log('# update user[2].rank')
     publish([{ table: 'user', id: 2, fields: ['rank'] }])
     expect(count_user.callCount).to.equals(4)
     expect(look_up_user_by_username.callCount).to.equals(3)
@@ -95,7 +97,7 @@ context('Filter spec', () => {
     expect(select_post_by_timestamp.callCount).to.equals(0)
     expect(select_post_1.callCount).to.equals(0)
 
-    console.log('# update post 1')
+    log('# update post 1')
     publish([{ table: 'post', id: 1 }])
     expect(count_user.callCount).to.equals(4)
     expect(look_up_user_by_username.callCount).to.equals(3)
