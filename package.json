@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "Publish and subscribe to database queries, serve as backbone of live query change detection engine",
   "keywords": [
-    "live",
-    "query",
+    "live-query",
     "filter",
     "sql",
     "cache",
     "invalidate",
-    "table"
+    "change-propagation",
+    "table",
+    "field"
   ],
   "author": "Beeno Tung <aabbcc1241@yahoo.com.hk> (https://beeno-tung.surge.sh)",
   "license": "BSD-2-Clause",
