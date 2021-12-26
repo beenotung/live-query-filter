@@ -41,14 +41,13 @@
     "tsc": "run-p tsc:*",
     "tsc:cjs": "tsc -p tsconfig.cjs.json",
     "tsc:esm": "tsc -p tsconfig.esm.json",
-    "test:ts": "ts-node test/index.ts",
     "mocha": "ts-mocha \"{src,test}/**/*.spec.ts\"",
     "coverage": "nyc ts-mocha --reporter=progress \"{src,test}/**/*.spec.ts\"",
     "report:update": "nyc --reporter=lcov ts-mocha --reporter=progress \"{src,test}/**/*.spec.ts\"",
     "report:open": "open-cli coverage/lcov-report/index.html",
     "report": "run-s report:update report:open",
     "prepublishOnly": "run-s test build",
-    "test": "run-s format tsc test:ts mocha"
+    "test": "run-s format tsc mocha"
   },
   "dependencies": {
   },
