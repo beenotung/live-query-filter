@@ -33,16 +33,6 @@ create table post (
       down: /* sql */ `drop table post`,
     },
     {
-      name: 'add user login',
-      up: /* sql */ `
-create table login (
-  id integer primary key
-, user_id integer references user(id)
-, timestamp integer default current_timestamp
-)`,
-      down: 'drop table login',
-    },
-    {
       name: 'add post author',
       up: /* sql */ `
 alter table post add column user_id integer references user(id)
@@ -61,53 +51,7 @@ create table like (
 , timestamp integer default current_timestamp
 )
 `,
-      down: 'drop table like',
-    },
-    {
-      name: 'add reply relation',
-      up: /* sql */ `
-create table reply (
-  id integer primary key
-, reply_post_id integer references post(id)
-, origin_post_id integer references post(id)
-)
-`,
-      down: 'drop table reply',
-    },
-    {
-      name: 'create post update',
-      up: /* sql */ `
-create table post_update (
-  id integer primary key
-, prev_post_id integer references post(id)
-, next_post_id integer references post(id)
-)
-`,
-      down: 'drop table post_update',
-    },
-    {
-      name: 'create post report',
-      up: /* sql */ `
-create table post_report (
-  id integer primary key
-, post_id integer references post(id)
-, user_id integer references user(id)
-, reason text
-)
-`,
-      down: 'drop table post_report',
-    },
-    {
-      name: 'create report approve',
-      up: /* sql */ `
-create table report_approve (
-  id integer primary key
-, report_id integer references post_report(id)
-, admin_id integer references user(id)
-, timestamp integer default current_timestamp
-)
-`,
-      down: 'drop table report_approve',
+      down: /* sql */ `drop table like`,
     },
   ],
 })
