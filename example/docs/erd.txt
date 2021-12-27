@@ -1,0 +1,44 @@
+# visualize on https://quick-erd.surge.sh/
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+migrations
+----------
+id integer PK
+name text
+up text
+down text
+
+
+user
+----
+id integer PK
+username text
+
+
+post
+----
+id integer PK
+content text
+create_time integer
+user_id integer FK >0- user.id
+
+
+like
+----
+id integer PK
+user_id integer FK >0- user.id
+post_id integer FK >0- post.id
+timestamp integer
+
