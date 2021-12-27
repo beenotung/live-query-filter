@@ -9,3 +9,6 @@ dist/
 .env
 .nyc_output
 coverage/
+store.db
+store.db-shm
+store.db-wal

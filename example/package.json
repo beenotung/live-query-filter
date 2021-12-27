@@ -10,6 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "live-query-filter": "link:.."
+    "better-sqlite3": "^7.4.5",
+    "better-sqlite3-schema": "^2.1.1",
+    "live-query-filter": "file:..",
+    "live-state.ts": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.4.2"
   }
 }
